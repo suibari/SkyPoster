@@ -2,7 +2,7 @@ import { BrowserOAuthClient, AtprotoDohHandleResolver } from '@atproto/oauth-cli
 
 export async function createOAuthClient() {
   const client = await BrowserOAuthClient.load({
-    clientId: 'https://sky-poster.vercel.app/client-metadata-dev.json',
+    clientId: 'https://sky-poster.vercel.app/client-metadata.json',
     handleResolver: 'https://bsky.social',  // デフォルトのハンドルリゾルバーを使用
     // 必要に応じて他のオプションを追加
   });
