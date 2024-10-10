@@ -1,8 +1,23 @@
-<!-- src/routes/+page.svelte -->
 <script>
   async function login() {
     const handle = 'suibari-cha.bsky.social'; // 適切なハンドルを指定
-    await fetch(`/api/login?handle=${handle}`);
+
+    // POST リクエストとして handle を送信
+    const response = await fetch(`/api/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ handle })
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      console.log('Login successful:', result);
+    } else {
+      const error = await response.json();
+      console.error('Login failed:', error);
+    }
   }
 </script>
 
