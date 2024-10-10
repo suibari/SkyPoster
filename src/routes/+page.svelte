@@ -1,2 +1,9 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<!-- src/routes/+page.svelte -->
+<script>
+  async function login() {
+    const handle = 'suibari-cha.bsky.social'; // 適切なハンドルを指定
+    await fetch(`/api/login?handle=${handle}`);
+  }
+</script>
+
+<button on:click={login}>Login with Bluesky</button>
