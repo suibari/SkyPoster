@@ -1,22 +1,30 @@
-// src/routes/api/atproto-oauth-callback.js
-import { client } from '$lib/oauth';
+import { getIronSession } from 'iron-session';
+import { COOKIE_SECRET } from '$env/static/private'; // 環境変数をインポート
+import { createClient } from '$lib/oauth'; // OAuthクライアントをインポート
 
-export async function GET({ url }) {
-  const params = new URLSearchParams(url.search);
-  
+export async function GET({ url, request }) {
+  const params = new URLSearchParams(url.search); // URLからクエリパラメータを取得
   try {
-    const { session, state } = await client.callback(params);
-    console.log('User authenticated as:', session.did);
-    // セッション情報を保存する処理を追加（例: データベースに保存）
+    const client = await createClient();
+    const { session } = await client.callback(params); // OAuthのコールバック処理
 
-    return {
-      status: 200,
-      body: { ok: true, session } // セッション情報を返す
-    };
+    // セッション管理
+    const clientSession = await getIronSession(request, {
+      cookieName: 'sid',
+      password: COOKIE_SECRET,
+    });
+
+    if (clientSession.did) {
+      throw new Error('session already exists');
+    }
+    
+    clientSession.did = session.did; // セッションにdidを保存
+    await clientSession.save(); // セッションを保存
+
   } catch (err) {
-    return {
-      status: 500,
-      body: { error: 'OAuth callback failed.' }
-    };
+    console.error({ err }, 'oauth callback failed'); // エラーログ
+    return Response.redirect(new URL('/?error', url), 302); // エラー時にリダイレクト
   }
+
+  return Response.redirect(new URL('/', url), 302); // 成功時にリダイレクト
 }

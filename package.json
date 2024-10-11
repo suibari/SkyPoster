@@ -29,7 +29,9 @@
 	"type": "module",
 	"dependencies": {
 		"@atproto/api": "^0.13.11",
-		"@atproto/jwk-jose": "^0.1.2",
-		"@atproto/oauth-client-node": "^0.1.4"
+		"@atproto/oauth-client-node": "^0.1.4",
+		"better-sqlite3": "^11.3.0",
+		"iron-session": "^8.0.3",
+		"kysely": "^0.27.4"
 	}
 }
