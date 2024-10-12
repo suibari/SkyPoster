@@ -1,6 +1,6 @@
 import { getIronSession } from 'iron-session';
 import { COOKIE_SECRET } from '$env/static/private'; // 環境変数をインポート
-import { createClient } from '$lib/oauth'; // OAuthクライアントをインポート
+import { createClient } from '$lib/server/oauth'; // OAuthクライアントをインポート
 
 export async function GET({ url, request }) {
   const response = new Response();

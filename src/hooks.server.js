@@ -1,6 +1,6 @@
 import { getIronSession } from 'iron-session';
 import { COOKIE_SECRET } from '$env/static/private';
-import { SessionStore } from '$lib/storage';
+import { SessionStore } from '$lib/server/storage';
 const sessionStore = new SessionStore();
 
 export async function handle({ event, resolve }) {

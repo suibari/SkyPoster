@@ -1,5 +1,5 @@
 // src/routes/api/login/+server.js
-import { createClient } from '$lib/oauth'; // lib/oauth.jsからOAuthクライアントをインポート
+import { createClient } from '$lib/server/oauth'; // lib/oauth.jsからOAuthクライアントをインポート
 
 export async function POST({ request }) {
   try {
