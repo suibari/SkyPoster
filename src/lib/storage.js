@@ -1,67 +1,77 @@
+import { createClient } from '@supabase/supabase-js';
+import { SUPABASE_URL, SUPABASE_KEY } from '$env/static/private';
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
 export class StateStore {
-  constructor(db) {
-    this.db = db;
-  }
-
   async get(key) {
-    const result = await this.db
-      .selectFrom('auth_state')
-      .selectAll()
-      .where('key', '=', key)
-      .executeTakeFirst();
-    
-    if (!result) return;
+    const { data, error } = await supabase
+      .from('auth_state')
+      .select('*')
+      .eq('key', key)
+      .single();
 
-    return JSON.parse(result.state);
+    if (error || !data) return;
+
+    return JSON.parse(data.state);
   }
 
   async set(key, val) {
     const state = JSON.stringify(val);
-    await this.db
-      .insertInto('auth_state')
-      .values({ key, state })
-      .onConflict((oc) => oc.doUpdateSet({ state }))
-      .execute();
+    const { data, error } = await supabase
+      .from('auth_state')
+      .upsert({ key, state, updated_at: new Date() }, { onConflict: ['key'] });
+
+    if (error) {
+      throw new Error(`Failed to set state: ${error.message}`);
+    }
+    return data;
   }
 
   async del(key) {
-    await this.db
-      .deleteFrom('auth_state')
-      .where('key', '=', key)
-      .execute();
+    const { error } = await supabase
+      .from('auth_state')
+      .delete()
+      .eq('key', key);
+
+    if (error) {
+      throw new Error(`Failed to delete state: ${error.message}`);
+    }
   }
 }
 
 export class SessionStore {
-  constructor(db) {
-    this.db = db;
-  }
-
   async get(key) {
-    const result = await this.db
-      .selectFrom('auth_session')
-      .selectAll()
-      .where('key', '=', key)
-      .executeTakeFirst();
-    
-    if (!result) return;
+    const { data, error } = await supabase
+      .from('auth_session')
+      .select('*')
+      .eq('key', key)
+      .single();
 
-    return JSON.parse(result.session);
+    if (error || !data) return;
+
+    return JSON.parse(data.session);
   }
 
   async set(key, val) {
     const session = JSON.stringify(val);
-    await this.db
-      .insertInto('auth_session')
-      .values({ key, session })
-      .onConflict((oc) => oc.doUpdateSet({ session }))
-      .execute();
+    const { data, error } = await supabase
+      .from('auth_session')
+      .upsert({ key, session, updated_at: new Date() }, { onConflict: ['key'] });
+
+    if (error) {
+      throw new Error(`Failed to set session: ${error.message}`);
+    }
+    return data;
   }
 
   async del(key) {
-    await this.db
-      .deleteFrom('auth_session')
-      .where('key', '=', key)
-      .execute();
+    const { error } = await supabase
+      .from('auth_session')
+      .delete()
+      .eq('key', key);
+
+    if (error) {
+      throw new Error(`Failed to delete session: ${error.message}`);
+    }
   }
 }

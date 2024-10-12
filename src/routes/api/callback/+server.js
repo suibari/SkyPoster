@@ -7,10 +7,11 @@ export async function GET({ url, request }) {
   try {
     const client = await createClient();
     const { session } = await client.callback(params); // OAuthのコールバック処理
+    console.log(session)
 
     // セッション管理
     const clientSession = await getIronSession(request, {
-      cookieName: 'sid',
+      cookieName: 'did',
       password: COOKIE_SECRET,
     });
 
@@ -18,7 +19,7 @@ export async function GET({ url, request }) {
       throw new Error('session already exists');
     }
     
-    clientSession.did = session.did; // セッションにdidを保存
+    clientSession.did = session.sub; // セッションにdidを保存
     await clientSession.save(); // セッションを保存
 
   } catch (err) {

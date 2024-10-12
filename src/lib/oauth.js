@@ -25,29 +25,8 @@ export const createClient = async (db) => {
         scope: 'atproto',
       },
     
-      stateStore: {
-        async set(key, state) {
-          // state保存処理
-        },
-        async get(key) {
-          // state取得処理
-        },
-        async del(key) {
-          // state削除処理
-        },
-      },
-    
-      sessionStore: {
-        async set(sub, session) {
-          // session保存処理
-        },
-        async get(sub) {
-          // session取得処理
-        },
-        async del(sub) {
-          // session削除処理
-        },
-      },
+      stateStore: new StateStore(),
+      sessionStore: new SessionStore(),
     
       // requestLock の実装も確認
       requestLock: async (key, fn) => {
