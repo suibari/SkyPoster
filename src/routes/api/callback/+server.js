@@ -3,14 +3,14 @@ import { COOKIE_SECRET } from '$env/static/private'; // 環境変数をインポ
 import { createClient } from '$lib/oauth'; // OAuthクライアントをインポート
 
 export async function GET({ url, request }) {
+  const response = new Response();
   const params = new URLSearchParams(url.search); // URLからクエリパラメータを取得
   try {
     const client = await createClient();
     const { session } = await client.callback(params); // OAuthのコールバック処理
-    console.log(session)
 
     // セッション管理
-    const clientSession = await getIronSession(request, {
+    const clientSession = await getIronSession(request, response, {
       cookieName: 'did',
       password: COOKIE_SECRET,
     });
@@ -22,10 +22,23 @@ export async function GET({ url, request }) {
     clientSession.did = session.sub; // セッションにdidを保存
     await clientSession.save(); // セッションを保存
 
-  } catch (err) {
-    console.error({ err }, 'oauth callback failed'); // エラーログ
-    return Response.redirect(new URL('/?error', url), 302); // エラー時にリダイレクト
-  }
+    return new Response(null, {
+      status: 302,
+      headers: {
+        'Location': '/',
+        'Set-Cookie': response.headers.get('set-cookie') // セッション情報を含むクッキーをレスポンスに設定
+      }
+    });
 
-  return Response.redirect(new URL('/', url), 302); // 成功時にリダイレクト
+  } catch (err) {
+    console.error('OAuth callback failed:', err); // エラーログ
+
+    // エラー時のリダイレクト
+    return new Response(null, {
+      status: 302,
+      headers: {
+        'Location': '/?error=oauth_failed'
+      }
+    });
+  }
 }
