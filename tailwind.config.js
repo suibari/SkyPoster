@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+import flowbitePlugin from 'flowbite/plugin'
+
 export default {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 
@@ -10,8 +12,14 @@ export default {
         text: '#e0e0e0',  // 落ち着いたテキスト色
         accent: '#ffcc00',  // アクセントカラー
       },
+			fontFamily: {
+        comic: ['"Comic Sans MS"', 'cursive', 'sans-serif'], // カスタムフォント追加
+      },
+    },
+    container: {
+      center: true,
     },
   },
 
-	plugins: [require('@tailwindcss/typography')]
+	plugins: [require('@tailwindcss/typography'), flowbitePlugin]
 };

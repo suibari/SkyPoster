@@ -1,23 +1,27 @@
 <script>
-	import PostButton from "./PostButton.svelte";
+  import { onMount } from 'svelte';
+  import { Navbar, NavBrand, NavLi, NavUl, NavHamburger } from 'flowbite-svelte';
+  import PostButton from "./PostButton.svelte";
 
   let text = "";
+  let avatar = "/defaultavatar.png";
+
+  onMount(async () => {
+    try {
+      const response = await fetch('/api/profile'); // APIエンドポイントにリクエスト
+      const result = await response.json(); // 結果をJSONとしてパース
+
+      if (response.ok) {
+        avatar = result.data.avatar; // avatar プロパティにAPIの結果を設定
+      }
+    } catch (error) {
+      console.error("Failed to fetch profile:", error);
+    }
+  });
 </script>
 
 <div class="flex justify-center items-center h-screen">
   <div class="w-2/3 bg-gray-500 p-6 rounded-lg shadow-lg relative">
-    
-    <!-- プロフィールアイコン -->
-    <div class="absolute top-4 left-4">
-      <img src="/path/to/profile-icon.png" alt="Profile Icon" class="w-10 h-10 rounded-full">
-    </div>
-    
-    <!-- メンション表示ボタン＆設定ボタン -->
-    <div class="absolute top-4 right-4 space-x-2">
-      <button class="bg-blue-500 text-white py-1 px-3 rounded">メンション</button>
-      <button class="bg-gray-300 text-black py-1 px-3 rounded">設定</button>
-    </div>
-
     <!-- テキストフィールド -->
     <textarea class="w-full h-40 p-4 rounded-lg border border-gray-300" placeholder="何を考えていますか？"  bind:value={text}></textarea>
 
@@ -29,6 +33,15 @@
   </div>
 </div>
 
-<style>
-  /* カスタムスタイルが必要ならここに追加 */
-</style>
+<div class="container relative">
+  <Navbar class="fixed top-0 left-0 w-full bg-gray-500 text-white">
+    <NavBrand class="m-2">
+      <img src={avatar} alt="Profile Icon" class="w-10 h-10 rounded-full" />
+    </NavBrand>
+    <NavHamburger class="mr-2" />
+    <NavUl>
+      <NavLi>Notifications</NavLi>
+      <NavLi>About</NavLi>
+    </NavUl>
+  </Navbar>
+</div>

@@ -26,7 +26,7 @@
 <div class="flex justify-center items-center h-screen">
   <div class="text-center">
     <!-- タイトル -->
-    <h1 class="text-8xl font-bold mb-8 text-primary" style="font-family: 'Comic Sans MS', cursive, sans-serif;">SkyPoster</h1>
+    <h1 class="text-8xl font-bold font-comic mb-8 text-primary">SkyPoster</h1>
     
     <!-- 説明テキスト -->
     <p class="text-md mb-8">SkyPoster is a simple Bluesky client app.<br>

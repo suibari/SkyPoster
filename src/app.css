@@ -3,5 +3,10 @@
 @import 'tailwindcss/utilities';
 
 body {
-  @apply bg-background text-text font-sans; /* Tailwind CSSのクラスを適用 */
+  @apply bg-background text-text font-sans;
+}
+
+html, body {
+  height: 100vh;
+  overflow: hidden;
 }
