@@ -4,7 +4,7 @@ import { SessionStore, StateStore } from './storage';
 
 let client;
 
-export const createClient = async (db) => {
+export const createClient = async () => {
   const url = PUBLIC_URL || `http://127.0.0.1:7860`;
   const enc = encodeURIComponent;
 

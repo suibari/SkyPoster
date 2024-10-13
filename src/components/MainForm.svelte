@@ -1,5 +1,7 @@
 <script>
-  // 必要な変数などは後ほど追加
+	import PostButton from "./PostButton.svelte";
+
+  let text = "";
 </script>
 
 <div class="flex justify-center items-center h-screen">
@@ -17,12 +19,12 @@
     </div>
 
     <!-- テキストフィールド -->
-    <textarea class="w-full h-40 p-4 rounded-lg border border-gray-300" placeholder="何を考えていますか？"></textarea>
+    <textarea class="w-full h-40 p-4 rounded-lg border border-gray-300" placeholder="何を考えていますか？"  bind:value={text}></textarea>
 
     <!-- 画像添付＆投稿ボタン -->
     <div class="flex justify-between mt-4">
       <button class="bg-gray-200 text-black py-2 px-4 rounded-lg">画像添付</button>
-      <button class="bg-blue-500 text-white py-2 px-4 rounded-lg">ポスト</button>
+      <PostButton {text} />
     </div>
   </div>
 </div>
