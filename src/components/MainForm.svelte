@@ -1,6 +1,8 @@
 <script>
   import { onMount } from 'svelte';
   import { Navbar, NavBrand, NavLi, NavUl, NavHamburger } from 'flowbite-svelte';
+  import { FileCirclePlusOutline } from 'flowbite-svelte-icons';
+  import { BellOutline, InfoCircleOutline } from 'flowbite-svelte-icons';
   import PostButton from "./PostButton.svelte";
 
   let text = "";
@@ -27,7 +29,7 @@
 
     <!-- 画像添付＆投稿ボタン -->
     <div class="flex justify-between mt-4">
-      <button class="bg-gray-200 text-black py-2 px-4 rounded-lg">画像添付</button>
+      <FileCirclePlusOutline class="w-8 h-8" />
       <PostButton {text} />
     </div>
   </div>
@@ -35,13 +37,18 @@
 
 <div class="container relative">
   <Navbar class="fixed top-0 left-0 w-full bg-gray-500 text-white">
-    <NavBrand class="m-2">
+    <NavBrand>
       <img src={avatar} alt="Profile Icon" class="w-10 h-10 rounded-full" />
     </NavBrand>
-    <NavHamburger class="mr-2" />
-    <NavUl>
-      <NavLi>Notifications</NavLi>
-      <NavLi>About</NavLi>
+    <NavHamburger />
+
+    <NavUl nonActiveClass="text-white">
+      <NavLi>
+        <BellOutline class="w-6 h-6" />
+      </NavLi>
+      <NavLi>
+        <InfoCircleOutline class="w-6 h-6" />
+      </NavLi>
     </NavUl>
   </Navbar>
 </div>
