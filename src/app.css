@@ -3,10 +3,11 @@
 @import 'tailwindcss/utilities';
 
 body {
-  @apply bg-background text-text font-sans;
+	@apply bg-background font-sans text-text;
 }
 
-html, body {
-  height: 100vh;
-  overflow: hidden;
+html,
+body {
+	height: 100vh;
+	overflow: hidden;
 }

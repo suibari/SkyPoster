@@ -21,6 +21,9 @@
 		"eslint": "^9.0.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-svelte": "^2.36.0",
+		"flowbite": "^2.5.2",
+		"flowbite-svelte": "^0.46.23",
+		"flowbite-svelte-icons": "^1.6.2",
 		"globals": "^15.0.0",
 		"prettier": "^3.1.1",
 		"prettier-plugin-svelte": "^3.1.2",
@@ -35,9 +38,6 @@
 		"@atproto/api": "^0.13.11",
 		"@atproto/oauth-client-node": "^0.1.4",
 		"@supabase/supabase-js": "^2.45.4",
-		"flowbite": "^2.5.2",
-		"flowbite-svelte": "^0.46.23",
-		"flowbite-svelte-icons": "^1.6.2",
 		"iron-session": "^8.0.3"
 	}
 }
