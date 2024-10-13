@@ -13,7 +13,7 @@ export const createClient = async () => {
       clientMetadata: {
         client_id: PUBLIC_URL ?
           `${url}/client-metadata.json` :
-          `http://localhost?redirect_uri=${enc(`${url}/api/callback`)}&scope=${enc('atproto')}`,
+          `http://localhost?redirect_uri=${enc(`${url}/api/callback`)}&scope=${enc('atproto transition:generic')}`,
         client_name: 'SkyPoster',
         client_uri: url,
         redirect_uris: [`${url}/api/callback`],
@@ -22,7 +22,7 @@ export const createClient = async () => {
         application_type: 'web',
         token_endpoint_auth_method: 'none',
         dpop_bound_access_tokens: true,
-        scope: 'atproto',
+        scope: 'atproto transition:generic',
       },
     
       stateStore: new StateStore(),

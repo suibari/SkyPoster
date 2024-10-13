@@ -1,16 +1,16 @@
-import { postWithOAuth } from "../../../lib/server/bluesky";
+import { postWithOAuth } from "$lib/server/bluesky";
 
 export async function POST({ request, locals }) {
   const session = locals.session;
   
-  if (!session || !session.user) {
+  if (!session) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
   }
-  
+
   const { text } = await request.json();
 
   try {
-    await postWithOAuth(text);
+    await postWithOAuth(session.tokenSet.sub, text);
 
     return new Response(JSON.stringify({ success: true }));
   } catch (error) {

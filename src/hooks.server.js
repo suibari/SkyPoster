@@ -4,7 +4,6 @@ import { SessionStore } from '$lib/server/storage';
 const sessionStore = new SessionStore();
 
 export async function handle({ event, resolve }) {
-  let sessionData;
   const response = new Response();
 
   // クライアントのリクエストからセッションID（クッキー）を取得
@@ -16,7 +15,7 @@ export async function handle({ event, resolve }) {
   // クッキーにセッションIDが存在する場合
   if (clientSession.did) {
     // セッションIDを使ってSupabaseから完全なセッション情報を取得
-    sessionData = await sessionStore.get(clientSession.did);
+    const sessionData = await sessionStore.get(clientSession.did);
 
     if (!sessionData) {
       // セッションが無効な場合はクッキーをクリアする
@@ -33,11 +32,6 @@ export async function handle({ event, resolve }) {
 
   // 次の処理へ進む
   const resolvedResponse = await resolve(event);
-
-  // if (sessionData) {
-  //   // クッキーを含むレスポンスヘッダーを設定
-  //   resolvedResponse.headers.append('Set-Cookie', response.headers.get('set-cookie'));
-  // }
   
   return resolvedResponse;
 }
