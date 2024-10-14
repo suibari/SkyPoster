@@ -1,6 +1,5 @@
 import { Agent } from "@atproto/api";
 import { createClient } from "./oauth";
-import { urlToDidWeb } from "@atproto/oauth-client-node";
 
 export class OAuthAgent {
   constructor(did) {
@@ -28,27 +27,44 @@ export class OAuthAgent {
   }
 
   async listNotifications() {
-    const params = { limit : 10 };
+    const params = { limit : 25 };
     const { data } = await this.agent.listNotifications(params);
 
     // like, repost, reply, mention, quote の元をたどり、dataにセット
-    // -> リプライ数に応じてかなり時間がかかる
+    const aturis = [];
     for (const notify of data.notifications) {
-      console.log(notify)
       if ((notify.reason === 'like') || (notify.reason === 'repost') ||
           (notify.reason === 'mention') || (notify.reason === 'reply') || (notify.reason === 'quote')) {
-        const uri = notify.reasonSubject;
-        const record = await getRecords(uri);
-        notify.record.parent = record;
+        aturis.push(notify.reasonSubject);
+      }
+    }
+    const posts = await getPosts(aturis);
+    for (const post of posts) {
+      const match = data.notifications.find(notify => notify.reasonSubject === post.uri);
+      if (match) {
+        match.parent = post;
       }
     }
 
     return data;
   }
 
-  async getParentRecord(aturi) {
-    const record = await getRecords(aturi);
-    return record;
+  async updateSeen() {
+    const url = new URL('https://public.api.bsky.app/xrpc/app.bsky.notification.updateSeen');
+  
+    const seenAt = new Date().toISOString();
+    
+    const response = await fetch(url.href, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ seenAt })
+    });
+    if (!response.ok) {
+      throw new Error('Network response is not ok');
+    }
+    return;
   }
 }
 
@@ -67,6 +83,27 @@ async function getRecords(aturi) {
       throw new Error('Network response is not ok');
     }
     return result;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getPosts(aturis) {
+  const url = new URL('https://public.api.bsky.app/xrpc/app.bsky.feed.getPosts');
+
+  aturis.forEach(uri => {
+    url.searchParams.append('uris', uri);
+  });
+
+  try {
+    const response = await fetch(url.href);
+    if (!response.ok) {
+      console.error(response)
+      throw new Error('Network response is not ok');
+    }
+
+    const {posts} = await response.json();
+    return posts;
   } catch (error) {
     throw error;
   }
