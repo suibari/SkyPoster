@@ -12,7 +12,7 @@ export async function GET({ locals }) {
   try {
     const agent = new OAuthAgent(did);
     await agent.init();
-    const data = await agent.getProfile();
+    const data = await agent.listNotifications();
 
     return new Response(JSON.stringify({ success: true, data }));
   } catch (error) {

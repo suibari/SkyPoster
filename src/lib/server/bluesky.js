@@ -1,38 +1,65 @@
-import { Agent, AtpAgent } from "@atproto/api";
+import { Agent } from "@atproto/api";
 import { createClient } from "./oauth";
+import { urlToDidWeb } from "@atproto/oauth-client-node";
 
-export async function postWithOAuth(did, text) {
-  try {
-    // OAuth認証情報でagentをインスタンス
+export class OAuthAgent {
+  constructor(did) {
+    this.did = did;
+  }
+
+  async init() {
     const client = await createClient();
-    const oauthSession = await client.restore(did);
-    const agent = new Agent(oauthSession);
+    this.oauthSession = await client.restore(this.did);
+    this.agent = new Agent(this.oauthSession);
+  }
 
+  async post(text) {
     const postObj = {
       $type: 'app.bsky.feed.post',
       text,
-    }
-    const result = await agent.post(postObj);
-  } catch (error) {
-    throw error;
+    };
+    return await this.agent.post(postObj);
   }
 
-  return;
-}
+  async getProfile() {
+    const params = { actor: this.did };
+    const { data } = await this.agent.getProfile(params);
+    return data;
+  }
 
-export async function getProfile(did) {
-  try {
-    // OAuth認証情報でagentをインスタンス
-    const client = await createClient();
-    const oauthSession = await client.restore(did);
-    const agent = new Agent(oauthSession);
+  async listNotifications() {
+    const params = { limit : 50 };
+    const { data } = await this.agent.listNotifications(params);
 
-    const params = {
-      actor: did
+    // reply, mention, quoted の元をたどり、dataにセット
+    for (const notify of data.notifications) {
+      if (notify.reason === 'reply') {
+        const uriReply = notify.record.reply.parent.uri;
+        const record = await getRecords(uriReply);
+        notify.record.parent = record;
+      }
     }
-    const {data} = await agent.getProfile(params);
 
     return data;
+  }
+}
+
+async function getRecords(aturi) {
+  const url = new URL('https://bsky.social/xrpc/com.atproto.repo.getRecord');
+
+  const [repo, collection, rkey] = aturi.replace('at://', '').split('/');
+  url.searchParams.append('repo', repo);
+  url.searchParams.append('collection', collection);
+  url.searchParams.append('rkey', rkey);
+  console.log(url.href)
+
+  try {
+    const response = await fetch(url.href);
+    const result = await response.json();
+    if (!response.ok) {
+      throw new Error('Network response is not ok');
+    }
+    return result;
   } catch (error) {
     throw error;
   }

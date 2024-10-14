@@ -15,9 +15,6 @@ export default {
 			fontFamily: {
 				comic: ['"Comic Sans MS"', 'cursive', 'sans-serif'] // カスタムフォント追加
 			}
-		},
-		container: {
-			center: true
 		}
 	},
 

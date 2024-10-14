@@ -4,6 +4,7 @@
   import { FileCirclePlusOutline } from 'flowbite-svelte-icons';
   import { BellOutline, InfoCircleOutline } from 'flowbite-svelte-icons';
   import PostButton from "./PostButton.svelte";
+	import Notifications from './Notifications.svelte';
 
   let text = "";
   let avatar = "/defaultavatar.png";
@@ -35,20 +36,18 @@
   </div>
 </div>
 
-<div class="container relative">
-  <Navbar class="fixed top-0 left-0 w-full bg-gray-500 text-white">
-    <NavBrand>
-      <img src={avatar} alt="Profile Icon" class="w-10 h-10 rounded-full" />
-    </NavBrand>
-    <NavHamburger />
+<Navbar class="fixed top-0 left-0 w-full bg-gray-500 text-white">
+  <NavBrand>
+    <img src={avatar} alt="Profile Icon" class="w-10 h-10 rounded-full" />
+  </NavBrand>
+  <NavHamburger />
 
-    <NavUl nonActiveClass="text-white">
-      <NavLi>
-        <BellOutline class="w-6 h-6" />
-      </NavLi>
-      <NavLi>
-        <InfoCircleOutline class="w-6 h-6" />
-      </NavLi>
-    </NavUl>
-  </Navbar>
-</div>
+  <NavUl nonActiveClass="text-white">
+    <NavLi>
+      <Notifications />
+    </NavLi>
+    <NavLi>
+      <InfoCircleOutline class="w-6 h-6" />
+    </NavLi>
+  </NavUl>
+</Navbar>
