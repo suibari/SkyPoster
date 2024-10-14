@@ -28,19 +28,27 @@ export class OAuthAgent {
   }
 
   async listNotifications() {
-    const params = { limit : 50 };
+    const params = { limit : 10 };
     const { data } = await this.agent.listNotifications(params);
 
-    // reply, mention, quoted の元をたどり、dataにセット
+    // like, repost, reply, mention, quote の元をたどり、dataにセット
+    // -> リプライ数に応じてかなり時間がかかる
     for (const notify of data.notifications) {
-      if (notify.reason === 'reply') {
-        const uriReply = notify.record.reply.parent.uri;
-        const record = await getRecords(uriReply);
+      console.log(notify)
+      if ((notify.reason === 'like') || (notify.reason === 'repost') ||
+          (notify.reason === 'mention') || (notify.reason === 'reply') || (notify.reason === 'quote')) {
+        const uri = notify.reasonSubject;
+        const record = await getRecords(uri);
         notify.record.parent = record;
       }
     }
 
     return data;
+  }
+
+  async getParentRecord(aturi) {
+    const record = await getRecords(aturi);
+    return record;
   }
 }
 
@@ -51,7 +59,6 @@ async function getRecords(aturi) {
   url.searchParams.append('repo', repo);
   url.searchParams.append('collection', collection);
   url.searchParams.append('rkey', rkey);
-  console.log(url.href)
 
   try {
     const response = await fetch(url.href);

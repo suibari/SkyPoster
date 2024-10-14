@@ -2,7 +2,7 @@
   import { Avatar, Dropdown, DropdownHeader, DropdownItem, DropdownDivider, Tooltip } from 'flowbite-svelte';
   import { Badge } from 'flowbite-svelte';
   import { Modal } from 'flowbite-svelte';
-  import { BellOutline } from 'flowbite-svelte-icons';
+  import { BellOutline, HeartOutline, UserAddOutline, ArrowsRepeatOutline } from 'flowbite-svelte-icons';
 
   let showNotifications = false;
   let notifications = [];
@@ -20,28 +20,6 @@
       console.error("Failed to fetch notifications:", error);
     }
   }
-
-  function textByReason(notification) {
-    switch (notification.reason) {
-      case 'like':
-        return "あなたに いいね しました!";
-      case 'repost':
-        return "あなたのポストを リポスト しました!";
-      case 'follow':
-        return "あなたを フォロー しました!";
-      case 'mention':
-        console.log(notification.record);
-        return notification.record.text;
-      case 'reply':
-        console.log(notification.record);
-        return notification.record.text;
-      case 'quote':
-        console.log(notification.record);
-        return notification.record.text;
-      default:
-        break;
-    }
-  }
 </script>
 
 <BellOutline size="lg" withEvents="true" on:click={handleNotifications} />
@@ -54,7 +32,16 @@
         <div class="flex-col ml-2">
           <p class="text-sm">{notification.author.displayName}</p>
           <div class="flex">
-            <p class="text-md font-normal">{textByReason(notification)}</p>
+            <!-- <p class="text-md font-normal">{textByReason(notification)}</p> -->
+            {#if notification.reason === 'like'}
+              <HeartOutline size="lg" />
+            {:else if notification.reason === 'repost'}
+              <ArrowsRepeatOutline size="lg" />
+            {:else if notification.reason === 'follow'}
+              <UserAddOutline size="lg" />
+            {:else}
+              <p class="text-md font-normal">{notification.record.text}</p>
+            {/if}
             {#if !notification.isRead}
               <Badge color="red" class="ml-2">New!</Badge>
             {/if}
@@ -72,7 +59,7 @@
       </div>
       <!-- 返信元、引用元 -->
       {#if notification.record.parent}
-        <div class="flex-col ml-12">
+        <div class="flex-col mt-2 ml-12 pl-2 border-l-2 border-gray-300">
           <p class="text-md font-normal">{notification.record.parent.value.text}</p>
           <p class="text-xs font-normal mt-1">{new Date(notification.record.parent.value.createdAt).toLocaleString('ja-JP', {
             year: 'numeric',
