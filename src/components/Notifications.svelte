@@ -4,9 +4,15 @@
   import { Badge, Indicator  } from 'flowbite-svelte';
   import { Modal } from 'flowbite-svelte';
   import { BellOutline, HeartOutline, UserAddOutline, ArrowsRepeatOutline } from 'flowbite-svelte-icons';
+	import { onMount } from "svelte";
+  import { registerPushNotifications } from '$lib/notify';
 
   let showNotifications = false;
   let notifications = [];
+
+  onMount(() => {
+    registerPushNotifications();
+  });
 
   async function handleNotifications(showModal) {
     try {

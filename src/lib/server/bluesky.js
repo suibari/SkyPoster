@@ -98,7 +98,6 @@ async function getPosts(aturis) {
   try {
     const response = await fetch(url.href);
     if (!response.ok) {
-      console.error(response)
       throw new Error('Network response is not ok');
     }
 
