@@ -1,0 +1,14 @@
+{
+  "short_name": "SkyPoster-PWA",
+  "name": "SkyPoster-PWA",
+  "display": "standalone",
+  "orientation": "portrait",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    }
+  ]
+}
