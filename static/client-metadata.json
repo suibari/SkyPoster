@@ -5,7 +5,7 @@
   "logo_uri": "https://sky-poster.vercel.app",
   "tos_uri": "https://sky-poster.vercel.app",
   "policy_uri": "https://sky-poster.vercel.app",
-  "redirect_uris": ["https://sky-poster.vercel.app/callback"],
+  "redirect_uris": ["https://sky-poster.vercel.app/api/callback"],
   "scope": "atproto transition:generic",
   "grant_types": ["authorization_code", "refresh_token"],
   "response_types": ["code"],
