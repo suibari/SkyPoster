@@ -1,5 +1,5 @@
 import { OAuthAgent } from "$lib/server/bluesky";
-import { sendWebPushNotification } from "$lib/server/webpush";
+import { sendWebPushNotification, removeSubscriptionFromDatabase } from "$lib/server/webpush";
 import { supabase } from "$lib/server/storage";
 
 export async function GET({ locals }) {
@@ -18,19 +18,22 @@ export async function GET({ locals }) {
 
     // 未読があったらwebpush通知
     const unread = data.notifications.filter(notify => !notify.isRead).length;
-    if (1) {
+    if (unread > 0) {
       const {data, error} = await supabase.from('subscriptions').select('subscription').eq('key', did);
       if (error) {
         throw error;
       }
       const subscription = data[0].subscription;
-      const payload = "test";
+      const payload = {
+        title: "title",
+        body: "body",
+        icon: "/favicon.png"
+      };
       await sendWebPushNotification(subscription, payload)
-        .catch(error => {
+        .catch(async error => {
           if (error.statusCode === 410 || error.statusCode === 404) {
-            // Subscription has expired or is no longer valid
-            console.log('Subscription has unsubscribed or expired, removing from database');
-            // removeSubscriptionFromDatabase(subscription);
+            console.log(`Subscription has unsubscribed or expired, removing from database: ${did}`);
+            await removeSubscriptionFromDatabase(did);
           }
         });
     }

@@ -1,6 +1,7 @@
 import { PRIVATE_VAPID_KEY } from '$env/static/private';
 import { PUBLIC_VAPID_KEY } from '$env/static/public';
 import webpush from 'web-push';
+import { supabase } from './storage';
 
 webpush.setVapidDetails(
   'mailto:you@example.com',
@@ -21,5 +22,17 @@ export async function sendWebPushNotification(subscription, payload) {
   } catch (error) {
     console.error('Error sending Web Push notification:', error);
     throw error; // エラーハンドリング
+  }
+}
+
+export async function removeSubscriptionFromDatabase(did) {
+  try {
+    const {data, error} = await supabase.from('subscriptions').delete().eq('key', did).select();
+    if (error) {
+      throw error;
+    }
+    console.log(`Subscription removed: ${did}`);
+  } catch (error) {
+    console.error('Failed to remove subscription from database:', error);
   }
 }
