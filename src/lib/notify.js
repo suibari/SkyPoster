@@ -26,7 +26,6 @@ export async function registerPushNotifications() {
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY), // VAPIDの公開鍵
       });
-      console.log(subscription)
 
       // サーバーにサブスクリプション情報を送信
       await fetch('/api/subscribe', {
