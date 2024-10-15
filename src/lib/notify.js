@@ -15,6 +15,18 @@ export function urlBase64ToUint8Array(base64String) {
   return outputArray;
 }
 
+export async function registerServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./src/service-worker.js').then(registration => {
+        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+      }, err => {
+        console.error('ServiceWorker registration failed:', err);
+      });
+    });
+  }
+}
+
 export async function registerPushNotifications() {
   if ('serviceWorker' in navigator && 'PushManager' in window) {
     try {
