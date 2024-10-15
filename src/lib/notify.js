@@ -31,7 +31,7 @@ export async function registerPushNotifications() {
   if ('serviceWorker' in navigator && 'PushManager' in window) {
     try {
       // Service Worker を登録
-      const register = await navigator.serviceWorker.register('./src/service-worker.js');
+      const register = await navigator.serviceWorker.register('./src/service-worker.js', { scope: '/' });
       
       // Push通知のサブスクリプションを作成
       const subscription = await register.pushManager.subscribe({
