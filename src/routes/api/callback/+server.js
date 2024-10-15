@@ -15,8 +15,8 @@ export async function GET({ url, request }) {
       password: COOKIE_SECRET,
     });
 
-    if (clientSession.did) {
-      throw new Error('session already exists');
+    if (clientSession.did && clientSession.did !== session.sub) {
+      throw new Error('session already exists for another user');
     }
     
     clientSession.did = session.sub; // セッションにdidを保存
