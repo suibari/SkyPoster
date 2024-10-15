@@ -1,4 +1,4 @@
-import { PUBLIC_URL } from '$env/static/private';
+import { PUBLIC_URL } from '$env/static/public';
 import { NodeOAuthClient } from '@atproto/oauth-client-node';
 import { SessionStore, StateStore } from './storage';
 
