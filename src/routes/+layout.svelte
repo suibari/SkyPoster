@@ -1,11 +1,11 @@
 <script>
 	import '../app.css';
-  // import { onMount } from 'svelte';
-	// import { registerPushNotifications } from '$lib/notify';
+  import { onMount } from 'svelte';
+	import { registerServiceWorker } from '$lib/notify';
 
-	// onMount(() => {
-	// 	registerPushNotifications();
-	// });
+	onMount(() => {
+		registerServiceWorker();
+	});
 </script>
 
 <slot></slot>

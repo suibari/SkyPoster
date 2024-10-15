@@ -1,4 +1,5 @@
 import { PUBLIC_VAPID_KEY } from '$env/static/public';
+import workerUrl from '$src/service-worker.js?url';
 
 export function urlBase64ToUint8Array(base64String) {
   const padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -15,23 +16,23 @@ export function urlBase64ToUint8Array(base64String) {
   return outputArray;
 }
 
-// export async function registerServiceWorker() {
-//   if ('serviceWorker' in navigator) {
-//     window.addEventListener('load', () => {
-//       navigator.serviceWorker.register('./src/service-worker.js').then(registration => {
-//         console.log('ServiceWorker registration successful with scope: ', registration.scope);
-//       }, err => {
-//         console.error('ServiceWorker registration failed:', err);
-//       });
-//     });
-//   }
-// }
+export async function registerServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register(workerUrl).then(registration => {
+        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+      }, err => {
+        console.error('ServiceWorker registration failed:', err);
+      });
+    });
+  }
+}
 
 export async function registerPushNotifications() {
   if ('serviceWorker' in navigator && 'PushManager' in window) {
     try {
       // Service Worker を登録
-      const register = await navigator.serviceWorker.register('./src/service-worker.js', { scope: '/' });
+      const register = await navigator.serviceWorker.register(workerUrl);
       
       // Push通知のサブスクリプションを作成
       const subscription = await register.pushManager.subscribe({
