@@ -1,5 +1,5 @@
 import { PUBLIC_VAPID_KEY } from '$env/static/public';
-import workerUrl from '$src/service-worker.js?url';
+const workerPath = '/service-worker.js';
 
 export function urlBase64ToUint8Array(base64String) {
   const padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -19,7 +19,7 @@ export function urlBase64ToUint8Array(base64String) {
 export async function registerServiceWorker() {
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register(workerUrl).then(registration => {
+      navigator.serviceWorker.register(workerPath).then(registration => {
         console.log('ServiceWorker registration successful with scope: ', registration.scope);
       }, err => {
         console.error('ServiceWorker registration failed:', err);
@@ -31,11 +31,16 @@ export async function registerServiceWorker() {
 export async function registerPushNotifications() {
   if ('serviceWorker' in navigator && 'PushManager' in window) {
     try {
-      // Service Worker を登録
-      const register = await navigator.serviceWorker.register(workerUrl);
-      
+      // 既存のService Workerを取得
+      const registration = await navigator.serviceWorker.getRegistration();
+
+      if (!registration) {
+        console.error('ServiceWorker is not registered yet');
+        return;
+      }
+
       // Push通知のサブスクリプションを作成
-      const subscription = await register.pushManager.subscribe({
+      const subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY), // VAPIDの公開鍵
       });
