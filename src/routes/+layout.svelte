@@ -9,10 +9,10 @@
 	});
 
   onMount(async () => {
-    if (PUBLIC_NODE_ENV !== 'production') {
+    // if (PUBLIC_NODE_ENV !== 'production') {
       const eruda = (await import('eruda')).default;
       eruda.init();
-    }
+    // }
   });
 </script>
 
