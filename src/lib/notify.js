@@ -1,5 +1,6 @@
 import { PUBLIC_VAPID_KEY, PUBLIC_NODE_ENV } from '$env/static/public';
-const workerPath = (PUBLIC_NODE_ENV === 'development') ? './src/service-worker.js' : '/service-worker.js';
+import workerUrl from '$src/service-worker.js?url';
+const workerPath = (PUBLIC_NODE_ENV === 'development') ? './src/service-worker.js' : workerUrl;
 
 export function urlBase64ToUint8Array(base64String) {
   const padding = '='.repeat((4 - base64String.length % 4) % 4);
