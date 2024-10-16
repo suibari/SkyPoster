@@ -13,7 +13,8 @@ export const POST = async ({ request, locals }) => {
   // サブスクリプション情報をデータベースに保存
   const { data, error } = await supabase
     .from('subscriptions') // サブスクリプションテーブルを指定
-    .insert({
+    .upsert({
+      endpoint: subscription.endpoint,
       key: did,
       subscription: subscription,
     });
